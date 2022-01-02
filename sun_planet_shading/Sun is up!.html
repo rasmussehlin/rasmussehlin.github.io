@@ -1,0 +1,156 @@
+<html>
+	<head>
+		<title>Sun is up! :D</title>
+		<script>
+			var mouse = {x: 0, y: 0};
+
+			document.addEventListener('mousemove', function(e){ 
+			    mouse.x = e.clientX || e.pageX; 
+			    mouse.y = e.clientY || e.pageY 
+			}, false);
+
+			// FUN!
+			var follow = false;
+			var maxOffsetX = 40;
+			var maxOffsetY = 40;
+			var bollShadowBlur = 55; 
+			var bollShadowSpread = 10;
+			var boxShadow = "";
+			var oneHundredPercent;
+
+			function UpdateMousePosition()
+			{
+				console.log("X:" + mouse.x + " Y:" + mouse.y);
+
+				// SOL-POSITION
+				if (!(mouse.x == 0 && mouse.y == 0))
+				{
+					sol.style.left = (mouse.x - (parseInt(sol.style.width.substring(0, sol.style.width.length - 2)) / 2)).toString() + "px";
+					sol.style.top = (mouse.y - (parseInt(sol.style.height.substring(0, sol.style.height.length - 2)) / 2)).toString() + "px";
+				}
+
+				Update();
+
+				// GRAB THE SUN
+
+				if (follow)
+				{
+					setTimeout(UpdateMousePosition, 1);
+				}
+			}
+
+			function Update()
+			{
+				// SKUGGA					
+				var solX = sol.getBoundingClientRect().left;
+				var solY = sol.getBoundingClientRect().top;
+				var bollX = boll.getBoundingClientRect().left;
+				var bollY = boll.getBoundingClientRect().top;
+				var offsetX = 0.0;
+				var offsetY = 0.0;
+				var diffX;
+				var diffY;
+				var percentDiffX = 0.0;
+				var percentDiffY = 0.0;
+
+				// BerÃ¤kna offset
+				diffX = solX - bollX;
+				diffY = solY - bollY;
+
+				if (diffX < oneHundredPercent && diffX > -oneHundredPercent)
+					percentDiffX = diffX / oneHundredPercent;
+				else if(diffX > 0)
+					percentDiffX = 1;
+				else
+					percentDiffX = -1;
+
+				if(diffY < oneHundredPercent && diffY > -oneHundredPercent)
+					percentDiffY = diffY / oneHundredPercent;
+				else if(diffY > 0)
+					percentDiffY = 1;
+				else
+					percentDiffY = -1;
+
+				console.log("bollX: " + bollX + " bollY: " + bollY + " percentX: " + percentDiffX + " percenY: " + percentDiffY);
+
+				offsetX = maxOffsetX * percentDiffX;
+				offsetY = maxOffsetY * percentDiffY;
+
+				boxShadow = "inset " + offsetX.toString() + "px " + offsetY.toString() + "px " + bollShadowBlur.toString() + "px " + bollShadowSpread.toString() + "px #0a290a, 0 0 5px 0px #444";
+				boll.style.boxShadow = boxShadow;
+			}
+
+			function Follow()
+			{
+				follow = true;
+				UpdateMousePosition();
+				TextBeGone();
+			}
+
+			function TextBeGone() // FIXA ERROR
+			{
+				document.getElementById("text").style.opacity = "0";
+				setTimeout(function (){document.getElementById("sol").removeChild(document.getElementById("text"))}, 1000);
+			}
+
+			function Unfollow()
+			{
+				follow = false;
+				UpdateMousePosition();
+			}
+
+			function PlaceSunText()
+			{
+				var text = document.createElement("span");
+				text.style.cssText = "position:absolute;;margin:-3px 0 0 60px;font-size:25px;color:yellow;font-family:arial;padding-left:10px;border-left:1px solid #aaa;transition:opacity 1s";
+				text.innerHTML = "Grab Me!";
+				text.id = "text";
+				sol.appendChild(text);
+
+				Update();
+			}
+		</script>
+	</head>
+	<body onload="PlaceSunText()" style="
+														margin:0px;
+														overflow:hidden;
+														box-shadow:inset 0 0 200px 0px #333;
+														background:#555;">
+		<div id="boll" style="
+							position:absolute;
+							width:100px;
+							height:100px;
+							margin:auto;
+							top:0px;
+							right:0px;
+							bottom:0px;
+							left:0px;
+							background:limegreen;
+							border-radius:100%;
+							"></div> <!--box-shadow:inset 5px -5px 50px #444;-->
+
+		<div id="sol" 	onmousedown="Follow()" 
+						onmouseup="Unfollow()"
+						style="
+							position:absolute;
+							height:50px;
+							width:50px;
+							top:300px;
+							left:300px;
+							background:yellow;
+							border-radius:100%;
+							box-shadow: 0 0 15px 5px #ddddaa;
+							"></div>
+	</body>
+
+	<script>	
+		var boll = document.getElementById("boll");
+		var sol = document.getElementById("sol");
+		oneHundredPercent = window.innerWidth / 2;
+
+		window.addEventListener('resize', function(event){
+		  oneHundredPercent = window.innerWidth / 2;
+		  Update();
+		});
+	</script>
+</html>
