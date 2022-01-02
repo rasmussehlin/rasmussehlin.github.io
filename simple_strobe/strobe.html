@@ -1,0 +1,58 @@
+<html>
+	<head>
+		<style>
+			body {
+				background: #000000;
+				color: white;
+				font-family:arial;
+			}
+		</style>
+	</head>
+	<body onload="fetchHz()">
+		Frequency: <input type="text" value="0.1" name="frequency" id="hz" style="width:100px;"><br>
+		Flash duration: <input type="text" value="10" name="duration" id="dur" style="width:74px;">
+	
+		<script>
+			var hz = 0;
+			var flashDuration = 0;
+	
+			function fetchHz()
+			{
+				hz = document.getElementById('hz').value;
+	
+				sendToLog();
+	
+				document.body.style.backgroundColor = "black";
+	
+				setTimeout(changeToWhite, 1000/hz - flashDuration);
+			}
+	
+			function changeToWhite()
+			{
+				flashDuration = document.getElementById('dur').value;
+	
+				document.body.style.backgroundColor = "white";
+	
+				setTimeout(fetchHz, flashDuration);
+			}
+	
+			function sendToLog()
+			{
+				var freq = "Freq: " + hz + "hz";
+				var fDur = "FlashDuration: " + flashDuration + "ms";
+				var delay =  "Delay: " + (1000/hz - flashDuration) + "ms";
+	
+				for (var i = 0; i < 25; i++)
+				{
+					if (freq.length <= i && i < 15)
+						freq += " ";
+	
+					if (fDur.length <= i)
+						fDur += " ";
+				}
+	
+				console.log(freq + "|" + fDur + "|" + delay);			
+			}
+		</script>
+	</body>
+</html>
