@@ -1,0 +1,29 @@
+<html>
+	<head>
+		<title>Schackklocka</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script src="time.js"></script>
+	</head>
+	<body>
+		<div id="top" class="button" onclick="ChangeActive('top')">
+			<div class="time" id="timeT">
+				<p id="pTop">05:00</p>
+			</div>
+		</div>
+
+		<hr id="hr">
+		<div id="divider" onclick="Start()"><p id="start">START</p></div>
+
+		<div id="bottom" class="button" onclick="ChangeActive()">
+			<div class="time" id="timeB">
+				<p id="pBottom">05:00</p>
+			</div>
+		</div>
+		
+		<audio controls id="sound">
+			<source src="dongdongdong.mp3" type="audio/ogg">
+		</audio>
+
+		<script>FixStartPoint()</script>
+	</body>
+</html>
